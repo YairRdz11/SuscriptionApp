@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SuscriptionApp.DTOs;
@@ -58,6 +60,20 @@ namespace SuscriptionApp.Controllers
                 return BadRequest("Incorrect login");
             }
         }
+        [HttpGet("rebuild-token")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public ActionResult<AuthenticationResponse> Renovate()
+        {
+            var emailClaim = HttpContext.User.Claims.Where(claim => claim.Type == "email").FirstOrDefault();
+            var email = emailClaim.Value;
+
+            var userCredentials = new UserCredentials()
+            {
+                Email = emailClaim.Value
+            };
+
+            return BuildToken(userCredentials);
+        }
 
         private AuthenticationResponse BuildToken(UserCredentials userCredentials)
         {
@@ -80,5 +96,6 @@ namespace SuscriptionApp.Controllers
                 Expiration = expiration
             };
         }
+
     }
 }
