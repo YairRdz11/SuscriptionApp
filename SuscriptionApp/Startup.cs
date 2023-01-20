@@ -70,6 +70,11 @@ namespace SuscriptionApp
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("IsAdmin", policy => policy.RequireClaim("isAdmin"));
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
