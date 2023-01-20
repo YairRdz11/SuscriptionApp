@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SuscriptionApp.DTOs;
@@ -14,12 +13,15 @@ namespace SuscriptionApp.Controllers
     public class AccountsController : ControllerBase
     {
         private readonly UserManager<IdentityUser> userManager;
+        private readonly SignInManager<IdentityUser> signInManager;
         private readonly IConfiguration configuration;
 
         public AccountsController(UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager,
             IConfiguration configuration)
         {
             this.userManager = userManager;
+            this.signInManager = signInManager;
             this.configuration = configuration;
         }
         [HttpPost("register")]
@@ -40,6 +42,23 @@ namespace SuscriptionApp.Controllers
                 return BadRequest(result.Errors);
             }
         }
+        [HttpPost("login")]
+        public async Task<ActionResult<AuthenticationResponse>> Login(UserCredentials userCredentials)
+        {
+            var result = await signInManager
+                .PasswordSignInAsync(userCredentials.Email, userCredentials.Password, 
+                isPersistent: false, lockoutOnFailure: false);
+
+            if(result.Succeeded)
+            {
+                return BuildToken(userCredentials);
+            }
+            else
+            {
+                return BadRequest("Incorrect login");
+            }
+        }
+
         private AuthenticationResponse BuildToken(UserCredentials userCredentials)
         {
             var claims = new List<Claim>
