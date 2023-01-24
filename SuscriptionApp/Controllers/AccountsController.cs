@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SuscriptionApp.DTOs;
+using SuscriptionApp.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -17,14 +18,17 @@ namespace SuscriptionApp.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly IConfiguration configuration;
+        private readonly KeysService keysService;
 
         public AccountsController(UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            KeysService keysService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.configuration = configuration;
+            this.keysService = keysService;
         }
         [HttpPost("register")]
         public async Task<ActionResult<AuthenticationResponse>> Register(UserCredentials userCredentials)
@@ -37,6 +41,7 @@ namespace SuscriptionApp.Controllers
             
             if(result.Succeeded)
             {
+                await keysService.BuildKey(user.Id, Enums.KeyType.Free);
                 return await BuildToken(userCredentials, user.Id);
             }
             else

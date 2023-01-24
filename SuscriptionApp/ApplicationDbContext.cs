@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SuscriptionApp.Entities;
 
 namespace SuscriptionApp
 {
@@ -13,5 +14,7 @@ namespace SuscriptionApp
         {
             base.OnModelCreating(builder);
         }
+
+        public DbSet<KeyAPI> KeysAPI{ get; set; }
     }
 }

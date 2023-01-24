@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SuscriptionApp.Services;
 using System.Text;
 
 namespace SuscriptionApp
@@ -75,6 +76,8 @@ namespace SuscriptionApp
             {
                 options.AddPolicy("IsAdmin", policy => policy.RequireClaim("isAdmin"));
             });
+
+            services.AddScoped<KeysService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
