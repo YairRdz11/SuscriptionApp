@@ -37,7 +37,7 @@ namespace SuscriptionApp.Controllers
             
             if(result.Succeeded)
             {
-                return await BuildToken(userCredentials);
+                return await BuildToken(userCredentials, user.Id);
             }
             else
             {
@@ -53,7 +53,8 @@ namespace SuscriptionApp.Controllers
 
             if(result.Succeeded)
             {
-                return await BuildToken(userCredentials);
+                var user = await userManager.FindByEmailAsync(userCredentials.Email);
+                return await BuildToken(userCredentials, user.Id);
             }
             else
             {
@@ -67,12 +68,14 @@ namespace SuscriptionApp.Controllers
             var emailClaim = HttpContext.User.Claims.Where(claim => claim.Type == "email").FirstOrDefault();
             var email = emailClaim.Value;
 
+            var idClaim = HttpContext.User.Claims.Where(claim => claim.Type == "id").FirstOrDefault();
+            var userId = idClaim.Value;
+
             var userCredentials = new UserCredentials()
             {
                 Email = emailClaim.Value
             };
-
-            return await BuildToken(userCredentials);
+            return await BuildToken(userCredentials, userId);
         }
 
         [HttpPost("make-admin")]
@@ -93,11 +96,13 @@ namespace SuscriptionApp.Controllers
             return NoContent();
         }
 
-        private async Task<AuthenticationResponse> BuildToken(UserCredentials userCredentials)
+        private async Task<AuthenticationResponse> BuildToken(UserCredentials userCredentials,
+            string userId)
         {
             var claims = new List<Claim>
             {
-                new Claim("email", userCredentials.Email)
+                new Claim("email", userCredentials.Email),
+                new Claim("id", userId)
             };
 
             var user = await userManager.FindByEmailAsync(userCredentials.Email);
