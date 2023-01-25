@@ -8,7 +8,7 @@ using SuscriptionApp.Services;
 
 namespace SuscriptionApp.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/apikeys")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class APIKeysControllers : CustomBaseController
