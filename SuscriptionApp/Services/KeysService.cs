@@ -1,4 +1,5 @@
-﻿using SuscriptionApp.Entities;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using SuscriptionApp.Entities;
 using SuscriptionApp.Enums;
 
 namespace SuscriptionApp.Services
@@ -14,7 +15,7 @@ namespace SuscriptionApp.Services
 
         public async Task BuildKey(string userId, KeyType keyType)
         {
-            var key = Guid.NewGuid().ToString().Replace("-", "");
+            var key = GenerateKey();
 
             var keyAPI = new KeyAPI
             {
@@ -26,6 +27,11 @@ namespace SuscriptionApp.Services
 
             context.Add(keyAPI);
             await context.SaveChangesAsync();
+        }
+
+        public string GenerateKey()
+        {
+            return Guid.NewGuid().ToString().Replace("-", "");
         }
     }
 }

@@ -23,6 +23,8 @@ namespace SuscriptionApp
 
             services.AddControllers();
 
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddDbContext<ApplicationDbContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
 
