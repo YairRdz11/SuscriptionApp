@@ -16,5 +16,6 @@ namespace SuscriptionApp
         }
 
         public DbSet<KeyAPI> KeysAPI{ get; set; }
+        public DbSet<Request> Requests { get; set; }
     }
 }
