@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SuscriptionApp.Middlewares;
 using SuscriptionApp.Services;
 using System.Text;
 
@@ -93,6 +94,8 @@ namespace SuscriptionApp
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseLimitRequests();
 
             app.UseAuthorization();
 
