@@ -87,6 +87,13 @@ public class LimitRequestMiddleware
                 return;
             }
         }
+        var passRestrictions = RequestPassAnyRestriction(keyDB, httpContext);
+
+        if (!passRestrictions)
+        {
+            httpContext.Response.StatusCode = 403;
+            return;
+        }
 
         var request = new Request()
         {
@@ -98,5 +105,42 @@ public class LimitRequestMiddleware
         await context.SaveChangesAsync();
 
         await next(httpContext);
+    }
+
+    private bool RequestPassAnyRestriction(KeyAPI keyAPI, HttpContext httpContext)
+    {
+        var areThereRestrictions = keyAPI.DomainRestrictions.Any() || keyAPI.IPRestrictions.Any();
+
+        if (!areThereRestrictions)
+        {
+            return true;
+        }
+
+        var requestPassDomainRestrictions = RequestPassDomainRestrictions(keyAPI.DomainRestrictions, httpContext);
+
+        return requestPassDomainRestrictions;
+    }
+
+    private bool RequestPassDomainRestrictions(List<DomainRestriction> domainRestrictions, 
+        HttpContext httpContext) 
+    {
+        if(domainRestrictions == null || domainRestrictions.Count == 0)
+        {
+            return false;
+        }
+
+        var referer = httpContext.Request.Headers["Referer"].ToString();
+
+        if(string.IsNullOrEmpty(referer) )
+        {
+            return false;
+        }
+
+        Uri myUri = new Uri(referer);
+        string host = myUri.Host;
+
+        var passRestriction = domainRestrictions.Any(x => x.Domain == host);
+
+        return passRestriction;
     }
 }
