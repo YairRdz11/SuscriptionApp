@@ -30,6 +30,16 @@ public class LimitRequestMiddleware
         var limitRequestConfiguration = new LimitRequestConfiguration();
 
         configuration.GetRequiredSection("RequestLimits").Bind(limitRequestConfiguration);
+
+        var route = httpContext.Request.Path.ToString().ToLower();
+
+        var isRouteInWithList = limitRequestConfiguration.WhiteListRoutes.Any(x => route.Contains(x.ToLower()));
+        if (isRouteInWithList)
+        {
+            await next(httpContext);
+            return;
+        }
+
         var keystringValue = httpContext.Request.Headers["X-Api-Key"];
 
         if (keystringValue.Count == 0)

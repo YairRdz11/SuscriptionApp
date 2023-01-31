@@ -11,13 +11,13 @@ namespace SuscriptionApp.Controllers
     [Route("api/apikeys")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class APIKeysControllers : CustomBaseController
+    public class APIKeysController : CustomBaseController
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
         private readonly KeysService keysService;
 
-        public APIKeysControllers(ApplicationDbContext context,
+        public APIKeysController(ApplicationDbContext context,
             IMapper mapper,
             KeysService keysService)
         {
