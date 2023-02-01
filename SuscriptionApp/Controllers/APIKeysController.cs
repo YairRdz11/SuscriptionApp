@@ -30,7 +30,10 @@ namespace SuscriptionApp.Controllers
         public async Task<List<KeyDTO>> MyKeys()
         {
             var userId = GetUserId();
-            var keys = await context.KeysAPI.Where(x => x.UserId == userId).ToListAsync();
+            var keys = await context.KeysAPI
+                .Include(x => x.DomainRestrictions)
+                .Where(x => x.UserId == userId)
+                .ToListAsync();
 
             return mapper.Map<List<KeyDTO>>(keys);
         }

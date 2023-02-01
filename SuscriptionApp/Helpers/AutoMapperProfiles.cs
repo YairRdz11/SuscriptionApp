@@ -9,6 +9,8 @@ namespace SuscriptionApp.Helpers
         public AutoMapperProfiles()
         {
             CreateMap<KeyAPI, KeyDTO>();
+
+            CreateMap<DomainRestriction, DomainRestrictionDTO>();
         }
     }
 }
