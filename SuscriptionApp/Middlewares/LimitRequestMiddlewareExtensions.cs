@@ -57,7 +57,10 @@ public class LimitRequestMiddleware
 
         var key = keystringValue[0];
 
-        var keyDB = await context.KeysAPI.FirstOrDefaultAsync(x => x.Key == key);
+        var keyDB = await context.KeysAPI
+            .Include(x => x.DomainRestrictions)
+            .Include(x => x.IPRestrictions)
+            .FirstOrDefaultAsync(x => x.Key == key);
 
         if (keyDB == null)
         {
@@ -117,8 +120,27 @@ public class LimitRequestMiddleware
         }
 
         var requestPassDomainRestrictions = RequestPassDomainRestrictions(keyAPI.DomainRestrictions, httpContext);
+        var requestPassIPRestrictions = RequestPassIPRestrictions(keyAPI.IPRestrictions, httpContext);
 
-        return requestPassDomainRestrictions;
+        return requestPassDomainRestrictions || requestPassIPRestrictions;
+    }
+
+    private bool RequestPassIPRestrictions(List<IPRestriction> restrictions,
+        HttpContext httpContext)
+    {
+        if (restrictions == null || restrictions.Count == 0)
+        {
+            return false;
+        }
+
+        var ip = httpContext.Connection.RemoteIpAddress.ToString();
+
+        if(string.IsNullOrEmpty(ip))
+        {
+            return false;
+        }
+
+        return restrictions.Any(x => x.IP == ip);
     }
 
     private bool RequestPassDomainRestrictions(List<DomainRestriction> domainRestrictions, 
