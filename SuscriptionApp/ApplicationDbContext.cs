@@ -4,7 +4,7 @@ using SuscriptionApp.Entities;
 
 namespace SuscriptionApp
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<User>
     {
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

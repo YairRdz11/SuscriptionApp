@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SuscriptionApp.DTOs;
+using SuscriptionApp.Entities;
 using SuscriptionApp.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -15,13 +16,13 @@ namespace SuscriptionApp.Controllers
     [ApiController]
     public class AccountsController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
         private readonly IConfiguration configuration;
         private readonly KeysService keysService;
 
-        public AccountsController(UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+        public AccountsController(UserManager<User> userManager,
+            SignInManager<User> signInManager,
             IConfiguration configuration,
             KeysService keysService)
         {
@@ -33,7 +34,7 @@ namespace SuscriptionApp.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<AuthenticationResponse>> Register(UserCredentials userCredentials)
         {
-            var user = new IdentityUser { 
+            var user = new User { 
                 UserName = userCredentials.Email, 
                 Email = userCredentials.Email 
             };
