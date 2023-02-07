@@ -13,11 +13,14 @@ namespace SuscriptionApp
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.Entity<Invoice>().Property(x => x.Amount).HasColumnType("decimal(18,2)");
         }
 
-        public DbSet<KeyAPI> KeysAPI{ get; set; }
+        public DbSet<KeyAPI> KeysAPI { get; set; }
         public DbSet<Request> Requests { get; set; }
         public DbSet<DomainRestriction> DomainRestrictions { get; set; }
         public DbSet<IPRestriction> IPRestrictions { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<InvoiceIssued> InvoicesIssued { get; set; }
     }
 }
