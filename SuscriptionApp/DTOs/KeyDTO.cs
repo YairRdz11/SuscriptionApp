@@ -1,4 +1,6 @@
-﻿namespace SuscriptionApp.DTOs
+﻿using SuscriptionApp.Entities;
+
+namespace SuscriptionApp.DTOs
 {
     public class KeyDTO
     {
@@ -7,5 +9,6 @@
         public bool Enable { get; set; }
         public string KeyType { get; set; }
         public List<DomainRestrictionDTO> DomainRestrictions { get; set; }
+        public List<IPRestrictionDTO> IPRestrictions{ get; set; }
     }
 }

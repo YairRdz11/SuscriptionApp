@@ -32,6 +32,7 @@ namespace SuscriptionApp.Controllers
             var userId = GetUserId();
             var keys = await context.KeysAPI
                 .Include(x => x.DomainRestrictions)
+                .Include(x => x.IPRestrictions)
                 .Where(x => x.UserId == userId)
                 .ToListAsync();
 

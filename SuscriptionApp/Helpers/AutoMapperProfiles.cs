@@ -11,6 +11,8 @@ namespace SuscriptionApp.Helpers
             CreateMap<KeyAPI, KeyDTO>();
 
             CreateMap<DomainRestriction, DomainRestrictionDTO>();
+
+            CreateMap<IPRestriction, IPRestrictionDTO>();
         }
     }
 }
