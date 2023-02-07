@@ -60,6 +60,7 @@ public class LimitRequestMiddleware
         var keyDB = await context.KeysAPI
             .Include(x => x.DomainRestrictions)
             .Include(x => x.IPRestrictions)
+            .Include (x => x.User)
             .FirstOrDefaultAsync(x => x.Key == key);
 
         if (keyDB == null)
