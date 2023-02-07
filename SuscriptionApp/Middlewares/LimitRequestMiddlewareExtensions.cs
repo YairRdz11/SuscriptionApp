@@ -91,6 +91,12 @@ public class LimitRequestMiddleware
                 return;
             }
         }
+        else if(keyDB.User.BadUser)
+        {
+            httpContext.Response.StatusCode = 400;
+            await httpContext.Response.WriteAsync("User has not paid");
+            return;
+        }
         var passRestrictions = RequestPassAnyRestriction(keyDB, httpContext);
 
         if (!passRestrictions)
